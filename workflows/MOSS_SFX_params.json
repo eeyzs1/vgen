@@ -1,0 +1,27 @@
+{
+  "name": "MOSS_SFX_acceptance",
+  "date": "2026-10-04",
+  "pipeline": "comfyui-moss-soundeffect-v2 community node (HuizhiXu) over MOSS-SoundEffect-v2.0 (OpenMOSS, Apache-2.0)",
+  "models": {
+    "weights": "models/moss-sfx/MOSS-SoundEffect-v2.0 (10.4GB, junction to ComfyUI/models/moss-soundeffect-v2)",
+    "node_venv": "custom_nodes/comfyui-moss-soundeffect-v2/.venv (torch 2.13.0+cu130 local wheel + triton-windows 3.8.0.post29)"
+  },
+  "params": {
+    "dtype": "bfloat16", "vram_management": "auto",
+    "steps": 100, "cfg_scale": 4.0, "sigma_shift": 5.0,
+    "negative": "music, speech, vocals, singing",
+    "always_denises_30s_then_crops": true
+  },
+  "perf": { "first_track": "~156s incl DiT compile", "subsequent": "~85s/clip", "unload": "Unload node kills worker after graph, frees ~11GB (verified: 0 worker procs, VRAM back)" },
+  "acceptance": [
+    "sfx_0/grid_tap_s1/s2.wav: 2.0s @48kHz mono (board game wooden tap)",
+    "sfx_0/fog_reveal_s1/s2.wav: 3.0s (dust veil air burst)",
+    "sfx_0/false_marker_sting_s1/s2.wav: 2.0s (detuned mocking string sting)"
+  ],
+  "notes": [
+    "worker zombie on graph error: Unload node is downstream and skipped on failure -> restart server to clear stale worker (pre-triton worker caused repeated TritonMissing)",
+    "server MUST start via start_comfy.ps1: PYTHONUTF8=1 required, else worker stderr pump thread dies on GBK -> pipe fills -> deadlock",
+    "torchaudio not needed: worker returns npy; pipeline's torchaudio import is lazy inside save_audio() which ComfyUI path never calls",
+    "SFX model choice rationale: MMAudio A/B winner but weights CC-BY-NC (no commercial); SA Open CC-BY-NC; SA3 Medium gated. MOSS = Apache-2.0 clean."
+  ]
+}

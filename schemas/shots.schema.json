@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "shots"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "shots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "scene_id",
+          "mode",
+          "prompt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]+$"
+          },
+          "scene_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]+$"
+          },
+          "mode": {
+            "enum": [
+              "image",
+              "video",
+              "music",
+              "sfx"
+            ]
+          },
+          "prompt": {
+            "type": "string",
+            "minLength": 1
+          },
+          "target_duration": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "variants": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "seed": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "steps": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "recipe": {
+            "enum": [
+              "base",
+              "turbo"
+            ]
+          },
+          "image_mode": {
+            "enum": [
+              "text",
+              "reference",
+              "mask"
+            ]
+          },
+          "references": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_-]+$"
+            },
+            "uniqueItems": true
+          },
+          "fit": {
+            "enum": [
+              "crop",
+              "pad"
+            ]
+          },
+          "controls": {
+            "type": "object"
+          },
+          "first_frame": {
+            "type": "string"
+          },
+          "continue_from": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,9 @@
+/models/
+/out/
+/approved/
+/downloads/
+/logs/
+/.studio/
+/studio.local.json
+__pycache__/
+*.pyc

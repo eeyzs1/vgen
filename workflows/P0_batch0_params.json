@@ -1,0 +1,20 @@
+﻿{
+  "name": "P0_acceptance_and_batch0",
+  "date": "2026-10-03",
+  "pipeline": "astropuzzo/ComfyUI-MiniMax-H3-Image-Studio v24.1.0 (H3StudioModels->H3StudioGenerate->H3StudioRender->SaveImage)",
+  "models": {
+    "diffusion_model": "minimax_h3_fl2va_pruned_int8_convrot.safetensors (int8 ConvRot, 21.0GB)",
+    "text_encoder": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors (nvfp4 AWQ, 15.7GB)",
+    "video_vae": "minimax_h3_video_vae_int8_convrot.safetensors (int8 ConvRot, 2.8GB)"
+  },
+  "params": {
+    "resolution": "1216x832 custom pixels (3:2)",
+    "steps": 50,
+    "sampler": "er_sde",
+    "scheduler": "simple",
+    "seeds": "base_seed + k (k=1..3); batch_0 base 1000, acceptance base 42",
+    "prompt_template": "_style_anchor.txt + <event>.txt + '. Strictly avoid: ' + _negative.txt + '.'"
+  },
+  "perf": { "first_generation": "21.7s (incl. prepare)", "subsequent": "14.4s/image @ 3.85 it/s", "reload_between_prompts": "none (0 models unloaded)" },
+  "notes": "H3 is flow-matching: no native negative prompt slot; negative list folded into prompt as trailing avoidance clause. Review for concept leakage at style acceptance."
+}

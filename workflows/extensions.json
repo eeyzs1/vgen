@@ -1,0 +1,6 @@
+{
+  "schema_version": 1,
+  "dialogue": {"mode": "import", "formats": ["wav", "flac"], "track": "dialogue"},
+  "tts": {"enabled": false, "contract": {"inputs": ["text", "voice_reference", "language", "seed"], "outputs": ["audio"]}, "reason": "No local model selected or installed"},
+  "lip_sync": {"enabled": false, "contract": {"inputs": ["video", "dialogue_audio"], "outputs": ["video"]}, "reason": "No local model selected or installed"}
+}

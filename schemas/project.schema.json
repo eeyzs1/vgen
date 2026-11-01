@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "id",
+    "fps"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "fps": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 60
+    },
+    "width": {
+      "type": "integer",
+      "minimum": 2,
+      "multipleOf": 2
+    },
+    "height": {
+      "type": "integer",
+      "minimum": 2,
+      "multipleOf": 2
+    },
+    "style": {
+      "type": "string"
+    },
+    "color_space": {
+      "const": "bt709"
+    },
+    "assets": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "path"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "enum": [
+              "image",
+              "video",
+              "audio"
+            ]
+          },
+          "conditioning": {
+            "type": "boolean"
+          },
+          "role": {
+            "enum": [
+              "character",
+              "wardrobe",
+              "prop",
+              "scene",
+              "light",
+              "style",
+              "voice",
+              "motion",
+              "camera"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

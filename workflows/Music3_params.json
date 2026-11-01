@@ -1,0 +1,28 @@
+{
+  "name": "Music3_acceptance",
+  "date": "2026-10-03",
+  "pipeline": "ComfyUI native MiniMax Music 3 (blueprint: Text to Music (MiniMax Music 3))",
+  "models": {
+    "diffusion_model": "minimax_music3_dit_fp16.safetensors (4.9GB, fp16)",
+    "text_encoder": "minimax_music3_text_encoder_pruned_int8_convrot.safetensors (9.2GB, int8 ConvRot)",
+    "audio_vae": "minimax_music3_dav.safetensors (0.2GB)"
+  },
+  "params": {
+    "ksampler": { "steps": 30, "cfg": 1.7, "sampler": "euler", "scheduler": "simple", "denoise": 1.0 },
+    "negative": "ConditioningZeroOut (官方蓝图做法)",
+    "text_encode": { "cfg_scale": 1.7, "top_k": 50, "max_duration_s": 60 },
+    "save": "SaveAudioAdvanced format=flac, then local flac->wav 44.1kHz PCM16 via soundfile"
+  },
+  "perf": { "first_track": "~2min incl model load", "subsequent": "~55s/track", "gpu_free_after": "--free-gpu /free verified" },
+  "acceptance": {
+    "caption": "instrumental ambient theme, sparse low-saturation strings, dusty wind textures, soft low percussion, restrained quiet melody, slow tempo, exploratory frontier mood, documentary restraint, seamless loop feel",
+    "seed": 101,
+    "result": "music_0/acceptance_ambient_s1_00001.wav: 31.7s @ 44100Hz (model ended phrase early vs 60s max)"
+  },
+  "notes": [
+    "duration is a MAX; model ends at natural phrase boundary",
+    "lyrics empty = instrumental; [Verse]/[Chorus] tags supported for songs",
+    "SaveAudioAdvanced DynamicCombo API value must be a valid key string like 'flac' (invalid keys are silently dropped -> execute() missing format)",
+    "no seamless-loop guarantee; fade/crossfade in post for game BGM loops"
+  ]
+}

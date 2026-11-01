@@ -1,0 +1,46 @@
+{
+  "name": "Video_pipeline_plan",
+  "date": "2026-10-04",
+  "status": "PREPARED-NOT-ACTIVATED (owner deferred model download and first generation)",
+  "capability": {
+    "model": "MiniMax H3 FL2VA (already on disk for illustration) is natively a VIDEO model; ComfyUI 0.38 ships MiniMaxH3ImageToVideo / ReferenceToVideo / AddGuide + AV latent nodes and blueprint 'Image to Video (MiniMax H3).json'",
+    "shot_length": "124-362 frames @24fps = 5.2-15.1s trained range (17k+5 frame grid; param max 3600 untested)",
+    "resolution": "1344x768 default blueprint (32px steps)",
+    "audio": "H3 generates synced audio; decoding requires audio VAE (pending file)",
+    "long_video": "chaining: last frame of shot N = first frame of shot N+1; REF2VA weights (21GB, not downloaded) for reference consistency; this local workflow has not validated minute-level single-shot"
+  },
+  "pending_files": {
+    "note": "download via scripts/seq_dl_video.ps1 (ModelScope Comfy-Org/minimax-H3); hashes pre-registered in models/SHA256SUMS",
+    "vae/minimax_h3_audio_vae_fp32.safetensors": "605254808 bytes - synced audio decode",
+    "loras/minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors": "1956193000 bytes - 8-step speed recipe (vs ~50 steps base)"
+  },
+  "on_disk_already": {
+    "diffusion": "minimax_h3_fl2va_pruned_int8_convrot.safetensors (shared with illustration line)",
+    "text_encoder": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+    "video_vae": "minimax_h3_video_vae_int8_convrot.safetensors (int8 variant valid; blueprint uses fp16)"
+  },
+  "wiring": "run_video.py [UNVALIDATED]: UNETLoader -> LoraLoaderModelOnly(turbo,1.0) ; CLIPLoader(minimax) ; VAELoader(video int8) ; LoadImage(upload via /upload/image) -> MiniMaxH3ImageToVideo(1344x768, snapped length, first_frame) -> BasicGuider(pos) + ConditioningZeroOut + RandomNoise + KSamplerSelect(res_multistep) + BasicScheduler(simple,8,1.0) -> SamplerCustomAdvanced -> VAEDecode -> CreateVideo(24fps) -> SaveVideo(mp4). Audio decode path intentionally omitted (silent video); add VAEDecodeAudio from blueprint at activation.",
+  "quality_reference": {
+    "source": "pingwest.com/a/316102 head-to-head (2026-08-03)",
+    "verdict": "H3 vs Seedance 2.5 evenly matched, different personalities: H3 wins cinematic coherence/space stability/character consistency/synced audio/long-prompt understanding, errs by omission; Seedance wins precise camera-control execution/native 30s/multi-reference, errs by hallucination (e.g. ship on concrete). H3 called open-source SOTA.",
+    "caveat": "we run int8 quantized local (vs API full bf16 in that test); for game-asset micro-motion H3 strengths are the relevant ones",
+    "seedance_pricing_then": "H3 API 2K RMB0.8/s + open weights; Seedance closed, prev-gen 720P ~RMB1/s, 1080P >RMB2/s"
+  },
+  "director_roadmap": {
+    "phase0": "run seq_dl_video.ps1 (2.5GB) [deferred by owner]",
+    "phase1": "first-run validation of run_video.py, one 5s I2V acceptance shot (e.g. dog_alert illustration as first frame)",
+    "phase2": "director.py + shots.json schema (shot list: prompt/first-frame/duration/audio cues) -> keyframes via H3 image line (style anchor) -> shots via I2V -> BGM via Music 3 -> spot SFX via MOSS -> ffmpeg concat/crossfade/loudnorm; first target 60-90s short (8-12 shots)",
+    "phase3": "consistency suite (OmniChar .char files / REF2VA 21GB) for character-driven work; precedent: github.com/AEON-7/aeon-radio-drama built the audio version of exactly this pipeline on identical hardware (5090 + ComfyUI + ffmpeg mix)"
+  },
+  "historical_snapshot": true,
+  "implementation_update": {
+    "date": "2026-11-01",
+    "current_docs": [
+      "STUDIO_OPERATIONS.md",
+      "IMPLEMENTATION_STATUS.md",
+      "ACCEPTANCE.md"
+    ],
+    "status": "P0-P3 software implemented; GPU quality validation separate",
+    "note": "Earlier wiring and roadmap describe the 2026-10-04 state, not current executable recipes."
+  }
+}

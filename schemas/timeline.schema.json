@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "clips"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "clips": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "shot_id",
+          "in_frame",
+          "out_frame",
+          "start_frame"
+        ],
+        "anyOf": [
+          {
+            "required": [
+              "path"
+            ]
+          },
+          {
+            "required": [
+              "take_id"
+            ]
+          }
+        ],
+        "properties": {
+          "shot_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]+$"
+          },
+          "take_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "scene_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]+$"
+          },
+          "track": {
+            "enum": [
+              "video",
+              "dialogue",
+              "music",
+              "sfx",
+              "ambience"
+            ]
+          },
+          "in_frame": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "out_frame": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "start_frame": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "fade_in": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "fade_out": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "gain": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 16
+          },
+          "input_color_space": {
+            "enum": [
+              "srgb",
+              "bt709"
+            ]
+          }
+        }
+      }
+    },
+    "subtitles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "start_frame",
+          "end_frame",
+          "text"
+        ],
+        "properties": {
+          "start_frame": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "end_frame": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
